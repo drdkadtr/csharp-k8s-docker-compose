@@ -11,7 +11,8 @@ namespace Simple
             IKubernetes client = new Kubernetes(config);
             Console.WriteLine("Starting Request!");
 
-            var list = client.ListNamespacedPod("kube-system");
+            var ns = Environment.GetEnvironmentVariable("NAMESPACE") ?? "default";
+            var list = client.ListNamespacedPod(ns);
             foreach (var item in list.Items)
             {
                 Console.WriteLine(item.Metadata.Name);

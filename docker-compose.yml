@@ -6,5 +6,6 @@ services:
     network_mode: host
     environment:
       - ENVIRONMENT=Development
+      - NAMESPACE=kube-system
     volumes:
       - $HOME/.kube/config:/root/.kube/config:ro

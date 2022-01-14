@@ -1,5 +1,8 @@
-name: "Run dockerised CSharp app using KinD"
-on: [pull_request, push, workflow_dispatch]
+name: "Run dockerised CSharp app using k3d"
+on: [push, workflow_dispatch]
+
+env:
+  cluster-name: "csharp-cluster"
 
 jobs:
   build:
@@ -29,14 +32,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Start KinD
-        uses: engineerd/setup-kind@v0.5.0
+      - name: "Start k3d"
+        uses: AbsaOSS/k3d-action@v2
         with:
-          wait: 300s
-          config: kind.yaml
+          cluster-name: ${{ env.cluster-name }}
+          args: >-
+            --agents 1
+            --config=.github/assets/k3d.yaml
 
       - name: Wait for cluster to finish bootstraping
-        run: kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
+        run: |
+          kubectl config set-context ${{ env.cluster-name }} --namespace default
+          kubectl cluster-info
+          kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
 
       - name: Run and test demo
         run: |

@@ -38,7 +38,7 @@ jobs:
           cluster-name: ${{ env.cluster-name }}
           args: >-
             --agents 1
-            --config=.github/assets/k3d.yaml
+            --config=.github/workflows/assets/1.yaml
 
       - name: Wait for cluster to finish bootstraping
         run: |

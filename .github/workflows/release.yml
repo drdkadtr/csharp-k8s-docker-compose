@@ -1,0 +1,39 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*'
+env:
+  IMAGE_NAME: adtrdr/csharp-podlist
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: src
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Verify image
+        run: |
+          docker image ls ${{ env.IMAGE_NAME }} --no-trunc

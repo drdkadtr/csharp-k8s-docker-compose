@@ -50,6 +50,7 @@ jobs:
           kubectl cluster-info
           kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
 
-      - name: Run and test demo
+      - name: Build and test
+        id: result
         run: |
-          docker-compose up --build --force-recreat
+          docker-compose up --build --force-recreate

@@ -6,10 +6,4 @@ networking:
   disableDefaultCNI: true
 nodes:
   - role: control-plane
-    image: kindest/node:v1.22.2
-    kubeadmConfigPatches:
-      - |
-        kind: InitConfiguration
-        nodeRegistration:
-          kubeletExtraArgs:
-          node-labels: "ingress-ready=true"
+    image: kindest/node:v1.22.4

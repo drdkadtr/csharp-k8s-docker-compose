@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  app:
+    build:
+      context: ./src
+    network_mode: host
+    environment:
+      - ENVIRONMENT=Development
+    volumes:
+      - $HOME/.kube/config:/root/.kube/config:ro

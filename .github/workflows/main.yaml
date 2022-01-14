@@ -1,0 +1,21 @@
+name: "Run dockerised CSharp app using KinD"
+on: [pull_request, push, workflow_dispatch]
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Start KinD
+        uses: engineerd/setup-kind@v0.5.0
+        with:
+          wait: 300s
+          config: kind.yaml
+
+      - name: Wait for cluster to finish bootstraping
+        run: kubectl wait --for=condition=Ready pods --all --all-namespaces --timeout=300s
+
+      - name: Run and test demo
+        run: |
+          docker-compose up --build --force-recreat

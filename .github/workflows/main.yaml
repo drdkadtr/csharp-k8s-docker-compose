@@ -1,5 +1,9 @@
 name: "Run dockerised CSharp app using k3d"
-on: [push, workflow_dispatch]
+on:
+  push:
+    paths-ignore:
+      - '**/README.md'
+  workflow_dispatch:
 
 env:
   cluster-name: "csharp-cluster"
